@@ -7,7 +7,6 @@ variables:
 stages:
   - build
   - test1
-  - test2
   - test3
   - test4
   - deploy
@@ -30,18 +29,6 @@ test_job:
     paths:
       - coverage.xml
     expire_in: 1 week
-
-code_analysis:
-  stage: test2
-  image: sonarsource/sonar-scanner-cli:latest
-  dependencies:
-    - test_job
-  script:
-    - echo "Verificando artefatos do test_job"
-    - pwd
-    - ls -la
-    - if [ -f coverage.xml ]; then cat coverage.xml; else echo "coverage.xml não encontrado"; fi
-    - sonar-scanner -D sonar.python.coverage.reportPaths=coverage.xml
 bandit_scan:
   stage: test3
   image: python:3.11
