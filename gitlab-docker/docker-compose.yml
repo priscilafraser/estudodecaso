@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:16.9.6-ce.0
+    container_name: gitlab
+    hostname: 192.168.98.10
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9022:22"
+    volumes:
+      - ./gitlab/config:/etc/gitlab
+      - ./gitlab/logs:/var/log/gitlab
+      - ./gitlab/data:/var/opt/gitlab
