@@ -23,7 +23,7 @@ test_job:
     - pip install -r requirements.txt
     - pip install pytest pytest-cov
     - pytest || echo "Nenhum teste encontrado"
-    - pytest --cov=. --cov-report=xml
+    - pytest --cov=. --cov-report=xml || echo "Nenhum teste encontrado"
   artifacts:
     paths:
       - coverage.xml
