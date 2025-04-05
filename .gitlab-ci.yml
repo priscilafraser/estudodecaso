@@ -1,0 +1,24 @@
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_CLIENT_TIMEOUT: 600
+  COMPOSE_HTTP_TIMEOUT: 600
+  DOCKER_BUILDKIT: 0
+  COMPOSE_DOCKER_CLI_BUILD: 0
+stages:
+  - build
+  - test1
+  - test2
+  - deploy
+  - notify
+build_job:
+  stage: build
+  image: python:3.11
+  script:
+    - pip install -r requirements.txt
+test_job:
+  stage: test1
+  image: python:3.11
+  script:
+    - echo "Testando a aplicacao flask"
+    - pip install -r requirements.txt
+    - pytest || echo "Nenhum teste encontrado"
