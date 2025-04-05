@@ -23,6 +23,11 @@ test_job:
     - pip install -r requirements.txt
     - pytest || echo "Nenhum teste encontrado"
     - pytest --cov=. --cov-report=xml
+  artifacts:
+    paths:
+      - coverage.xml
+    expire_in: 1 week
+
 code_analysis:
   stage: test2
   image: sonarsource/sonar-scanner-cli:latest
