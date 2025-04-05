@@ -22,3 +22,23 @@ test_job:
     - echo "Testando a aplicacao flask"
     - pip install -r requirements.txt
     - pytest || echo "Nenhum teste encontrado"
+deploy_job:
+  stage: deploy
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
+
+  before_script:
+    - echo "Removendo container antigo na porta 5000"
+    - PORT_CONTAINERS=$(docker ps --filter "publish=5000" -q)
+    - echo $PORT_CONTAINERS
+    - |
+      if [ -n "$PORT_CONTAINERS" ]; then
+        docker stop $PORT_CONTAINERS
+        docker rm $PORT_CONTAINERS
+        sleep 5
+      fi
+
+  script:
+    - echo "Fazendo deploy da aplicação Flask"
+    - docker run -d -p 5000:5000 task-manager:latest
