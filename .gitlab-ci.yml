@@ -8,6 +8,8 @@ stages:
   - build
   - test1
   - test2
+  - test3
+  - test4
   - deploy
   - notify
 build_job:
@@ -40,7 +42,28 @@ code_analysis:
     - ls -la
     - if [ -f coverage.xml ]; then cat coverage.xml; else echo "coverage.xml não encontrado"; fi
     - sonar-scanner -D sonar.python.coverage.reportPaths=coverage.xml
-
+bandit_scan:
+  stage: test3
+  image: python:3.11
+  before_script:
+    - pip install bandit
+  script:
+    - echo "Executando análise de segurança com Bandit"
+    - bandit -r todo_project -f json -o bandit-report.json || true
+  artifacts:
+    paths:
+      - bandit-report.json
+    expire_in: 1 week
+dependency_check:
+  stage: test4
+  image: owasp/dependency-check:latest
+  script:
+    - echo "Executando análise de dependências com OWASP Dependency-Check"
+    - dependency-check.sh --project "TaskManager" --scan . --format JSON --out owasp-report
+  artifacts:
+    paths:
+      - owasp-report
+    expire_in: 1 week
 deploy_job:
   stage: deploy
   image: docker:20.10.16
